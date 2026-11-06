@@ -9,7 +9,19 @@
 </head>
 <body>
 <h1>书香校园图书列表</h1>
+<c:choose>
+  <c:when test="${not empty sessionScope.loginUser}">
+    <p>
+      欢迎，
+      <c:out value="${sessionScope.loginUser.nickname}" />
+    </p>
+  </c:when>
 
+  <c:otherwise>
+    <c:url value="/login" var="loginUrl" />
+    <a href="${loginUrl}">登录</a>
+  </c:otherwise>
+</c:choose>
 <c:if test="${empty requestScope.books}">
   <p>暂无图书。</p>
 </c:if>
