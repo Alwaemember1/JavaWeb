@@ -66,7 +66,9 @@ public class RegisterServlet extends HttpServlet {
         }
 
         // 登录页尚未实现，当前先在注册页反馈结果。
-        showMessage(request, response, "注册成功，用户已保存");
+        response.sendRedirect(
+                request.getContextPath() + "/login?registered=1"
+        );
     }
 
     private void showMessage(HttpServletRequest request, HttpServletResponse response,
