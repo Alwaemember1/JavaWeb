@@ -1,68 +1,77 @@
 package com.henau.book.servlet;
 
+import com.henau.book.data.UserRepository;
+import com.henau.book.model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import com.henau.book.model.User;
-import com.henau.book.data.UserRepository;
-import com.henau.book.util.PasswordUtil;
+
 import java.io.IOException;
+
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
+
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.getRequestDispatcher("/register.jsp").forward(request, response);
-
     }
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String nickname = request.getParameter("nickname");
-        if(username == null || username.isBlank() ){
-            request.setAttribute("message", "用户名不能为空");
-            request.getRequestDispatcher("/register.jsp").forward(request, response);
+
+        if (username == null || username.isBlank()) {
+            showMessage(request, response, "用户名不能为空");
             return;
         }
-        if(password == null || password.isBlank() ){
-            request.setAttribute("message", "密码不能为空");
-            request.getRequestDispatcher("/register.jsp").forward(request, response);
+        if (password == null || password.isBlank()) {
+            showMessage(request, response, "密码不能为空");
             return;
         }
-        if(nickname == null || nickname.isBlank() ){
-            request.setAttribute("message", "昵称不能为空");
-            request.getRequestDispatcher("/register.jsp").forward(request, response);
+        if (nickname == null || nickname.isBlank()) {
+            showMessage(request, response, "昵称不能为空");
             return;
         }
-        // 1. 处理密码
-        String passwordHash;
-        try {
-            passwordHash = PasswordUtil.hash(password);
-        } catch (IllegalStateException e) {
-            throw new ServletException("注册时密码处理失败", e);
+
+        username = username.trim();
+        nickname = nickname.trim();
+
+        if (username.length() < 4 || username.length() > 20) {
+            showMessage(request, response, "用户名长度必须为4～20个字符");
+            return;
+        }
+        if (password.length() < 8 || password.length() > 32) {
+            showMessage(request, response, "密码长度必须为8～32个字符");
+            return;
+        }
+        if (nickname.length() > 20) {
+            showMessage(request, response, "昵称不能超过20个字符");
+            return;
         }
 
-// 2. 把注册信息封装成用户对象
-        User user = new User(username, passwordHash, nickname);
+        // 按教材练习用户封装与上下文集合保存，只使用虚构测试密码。
+        User user = new User(username, password, nickname);
+        boolean saved = UserRepository.save(getServletContext(), user);
 
-// 3. 尝试保存，由仓库判断用户名是否重复
-        boolean saved = UserRepository.save(user);
-
-// 4. 根据保存结果反馈
         if (!saved) {
-            request.setAttribute("message", "用户名已存在，请更换用户名");
-
-            request.getRequestDispatcher("/register.jsp")
-                    .forward(request, response);
+            showMessage(request, response, "用户名已存在，请更换用户名");
             return;
         }
 
-        request.setAttribute("message", "注册成功，用户已保存");
+        // 登录页尚未实现，当前先在注册页反馈结果。
+        showMessage(request, response, "注册成功，用户已保存");
+    }
 
-        request.getRequestDispatcher("/register.jsp")
-                .forward(request, response); }
+    private void showMessage(HttpServletRequest request, HttpServletResponse response,
+                             String message) throws ServletException, IOException {
+        request.setAttribute("message", message);
+        request.getRequestDispatcher("/register.jsp").forward(request, response);
+    }
 }

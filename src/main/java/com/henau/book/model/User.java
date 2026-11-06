@@ -1,16 +1,15 @@
 package com.henau.book.model;
 
+// 课程本机演示使用测试密码，不用于真实账号或公开服务。
 public class User {
 
     private final String username;
-    private final String passwordHash;
+    private final String password;
     private final String nickname;
 
-    public User(String username,
-                String passwordHash,
-                String nickname) {
+    public User(String username, String password, String nickname) {
         this.username = username;
-        this.passwordHash = passwordHash;
+        this.password = password;
         this.nickname = nickname;
     }
 
@@ -18,8 +17,8 @@ public class User {
         return username;
     }
 
-    public String getPasswordHash() {
-        return passwordHash;
+    public String getPassword() {
+        return password;
     }
 
     public String getNickname() {
