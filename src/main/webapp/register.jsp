@@ -12,7 +12,8 @@
 <form action="${registerUrl}" method="post">
     <p>用户名：<input type="text" name="username"></p>
     <p>密码：<input type="password" name="password"></p>
-    <p><button type="submit" value="注册"></button></p>
+    <p>昵称：<input type="text" name="nickname"></p>
+    <p><button type="submit">注册</button></p>
 </form>
 </body>
 </html>
