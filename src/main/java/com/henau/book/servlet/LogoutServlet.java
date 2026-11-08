@@ -12,7 +12,7 @@ import java.io.IOException;
 public class LogoutServlet extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest request,
+    protected void doPost(HttpServletRequest request,
                          HttpServletResponse response)
             throws IOException {
         // 1. 获取 Session 对象
