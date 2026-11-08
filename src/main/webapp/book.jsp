@@ -15,6 +15,11 @@
       欢迎，
       <c:out value="${sessionScope.loginUser.nickname}" />
     </p>
+    <c:url value="/logout" var="logoutUrl" />
+
+    <form action="${logoutUrl}" method="post">
+      <button type="submit">退出登录</button>
+    </form>
   </c:when>
 
   <c:otherwise>
