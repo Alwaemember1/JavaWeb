@@ -59,9 +59,10 @@
     <a href="${detailUrl}">查看详情</a>
     <c:url value="/favorites" var="favoriteUrl">
     </c:url>
-    form action="${favoriteUrl}" method="post">
+    <form action="${favoriteUrl}" method="post">
       <input type="hidden" name="bookId" value="${book.id}" />
       <button type="submit">加入收藏</button>
+    </form>
     <hr>
   </div>
 </c:forEach>

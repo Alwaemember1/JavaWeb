@@ -1,8 +1,9 @@
 package com.henau.book.servlet;
 import com.henau.book.data.BookRepository;
-import com.henau.book.data.FavoriteReposity;
+import com.henau.book.data.FavoriteRepository;
 import com.henau.book.model.Book;
 import com.henau.book.model.User;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,25 +11,48 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet("/favorites")
 public class FavoriteServlet extends HttpServlet {
     @Override
-protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-        response.setContentType("text/plain;charset=UTF-8");
-        response.getWriter().println("已进入收藏夹");
+    protected void doGet(HttpServletRequest request,
+                         HttpServletResponse response)
+            throws ServletException, IOException {
+
+        HttpSession session = request.getSession(false);
+
+        if (session == null
+                || session.getAttribute("loginUser") == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+
+        User user = (User) session.getAttribute("loginUser");
+
+        // ① 查询当前用户收藏的完整图书对象
+        List<Book> books = FavoriteRepository.findBooksByUsername(
+                getServletContext(),
+                user.getUsername()
+        );
+
+        // ② 将集合放入请求，属性名称统一叫 favoriteBooks
+        request.setAttribute("favoriteBooks", books);
+
+        // ③ 转发到收藏页面
+        request.getRequestDispatcher("/favorites.jsp")
+                .forward(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-       HttpSession session = request.getSession(false);
+        HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("loginUser") == null) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
 
-       User user = (User) session.getAttribute("loginUser");
+        User user = (User) session.getAttribute("loginUser");
         String idText = request.getParameter("bookId");
         int bookId;
         try {
@@ -43,9 +67,33 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
             response.sendError(404, "图书不存在");
             return;
         }
-        boolean saved = FavoriteReposity.add(getServletContext(), user.getUsername(), bookId);
-        String result = saved ? "收藏成功" : "已收藏过该图书";
-        response.sendRedirect(request.getContextPath() + "/book/?favorite=" + result);
+        boolean saved = FavoriteRepository.add(getServletContext(), user.getUsername(), bookId);
+        String result = saved ? "added" : "exists";
+
+        response.sendRedirect(
+                request.getContextPath() + "/book?favorite=" + result
+        );
+
+        String action = request.getParameter("action");
+
+        if ("remove".equals(action)) {
+
+            // ③ 调用删除方法，身份必须来自 Session 中的 user
+            boolean removed = FavoriteRepository.remove(
+                    getServletContext(),
+                    user.getUsername(),
+                    bookId
+            );
+
+            String removeResult = removed ? "removed" : "missing";
+
+            response.sendRedirect(
+                    request.getContextPath()
+                            + "/favorites?result=" + removeResult
+            );
+            return;
+        }
+
+// 下面继续保留原来的添加收藏逻辑
     }
 }
-
