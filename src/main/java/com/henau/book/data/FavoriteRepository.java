@@ -4,9 +4,11 @@ import com.henau.book.model.Book;
 import com.henau.book.model.Favorite;
 import jakarta.servlet.ServletContext;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FavoriteRepository {
+    @SuppressWarnings("unchecked")
     private static List<Favorite> getFavorites(ServletContext context) {
         // 集合由 AppContextListener 在应用启动时创建。
         return (List<Favorite>) context.getAttribute("favorites");
@@ -26,13 +28,14 @@ public class FavoriteRepository {
     }
 
     public static List<Book> findBooksByUsername(ServletContext context, String username) {
-List<Book> result = new java.util.ArrayList<>();
+        List<Book> result = new ArrayList<>();
         List<Favorite> favorites = getFavorites(context);
         for (Favorite favorite : favorites) {
             if (favorite.getUsername().equals(username)) {
                 Book book = BookRepository.findById(favorite.getBookId());
                 if (book != null) {
-                    return List.of(book);
+                    // 累积所有匹配的图书，不能在第一本时结束查询。
+                    result.add(book);
                 }
             }
         }
@@ -40,16 +43,16 @@ List<Book> result = new java.util.ArrayList<>();
     }
 
     public static boolean remove(ServletContext context, String username, int bookId) {
-
-            List<Favorite> favorites = getFavorites(context);
-            for (int i = 0; i < favorites.size(); i++) {
-                Favorite favorite = favorites.get(i);
-                    favorites.remove(i);
-                    return true;
-                }
-
-            return false;
+        List<Favorite> favorites = getFavorites(context);
+        for (int i = 0; i < favorites.size(); i++) {
+            Favorite favorite = favorites.get(i);
+            // 只有当前用户的指定图书匹配时，才允许删除。
+            if (favorite.getUsername().equals(username)
+                    && favorite.getBookId() == bookId) {
+                favorites.remove(i);
+                return true;
+            }
         }
+        return false;
     }
-
-
+}

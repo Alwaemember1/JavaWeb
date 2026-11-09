@@ -44,6 +44,7 @@ public class FavoriteServlet extends HttpServlet {
                 .forward(request, response);
     }
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         HttpSession session = request.getSession(false);
@@ -67,13 +68,7 @@ public class FavoriteServlet extends HttpServlet {
             response.sendError(404, "图书不存在");
             return;
         }
-        boolean saved = FavoriteRepository.add(getServletContext(), user.getUsername(), bookId);
-        String result = saved ? "added" : "exists";
-
-        response.sendRedirect(
-                request.getContextPath() + "/book?favorite=" + result
-        );
-
+        // 先处理取消分支，结束后不再执行添加。
         String action = request.getParameter("action");
 
         if ("remove".equals(action)) {
@@ -94,6 +89,13 @@ public class FavoriteServlet extends HttpServlet {
             return;
         }
 
-// 下面继续保留原来的添加收藏逻辑
+        boolean saved = FavoriteRepository.add(
+                getServletContext(), user.getUsername(), bookId
+        );
+        String result = saved ? "added" : "exists";
+
+        response.sendRedirect(
+                request.getContextPath() + "/book?favorite=" + result
+        );
     }
 }
