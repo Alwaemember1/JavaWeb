@@ -56,7 +56,7 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
 
-        // 按教材练习用户封装与上下文集合保存，只使用虚构测试密码。
+
         User user = new User(username, password, nickname);
         boolean saved = UserRepository.save(getServletContext(), user);
 
@@ -65,7 +65,6 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
 
-        // 登录页尚未实现，当前先在注册页反馈结果。
         response.sendRedirect(
                 request.getContextPath() + "/login?registered=1"
         );

@@ -18,10 +18,8 @@ public class LoginFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
 
-        // ① 只取得已有 Session，没有就返回 null
         HttpSession session = req.getSession(false);
 
-        // ② 没有 Session，或没有登录用户，均视为未登录
         if (session == null
                 || session.getAttribute("loginUser") == null) {
 
@@ -29,7 +27,6 @@ public class LoginFilter implements Filter {
             return;
         }
 
-        // ③ 已登录，继续处理请求
         chain.doFilter(request, response);
     }
 }

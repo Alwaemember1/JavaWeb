@@ -15,13 +15,11 @@ public class LogoutServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request,
                          HttpServletResponse response)
             throws IOException {
-        // 1. 获取 Session 对象
         HttpSession session =request.getSession(false);
         if (session != null) {
-            // 2. 销毁 Session
             session.invalidate();
         }
-        // 3. 重定向到登录页
+
         response.sendRedirect(request.getContextPath() + "/login");
 
     }

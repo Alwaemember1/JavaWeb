@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-// 先提供最小个人中心，用于验收登录过滤器。
+
 @WebServlet("/profile")
 public class ProfileServlet extends HttpServlet {
 

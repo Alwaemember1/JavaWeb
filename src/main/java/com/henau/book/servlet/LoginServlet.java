@@ -14,7 +14,6 @@ import java.io.IOException;
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 
-    // 打开登录页面
     @Override
     protected void doGet(HttpServletRequest request,
                          HttpServletResponse response)
@@ -24,7 +23,7 @@ public class LoginServlet extends HttpServlet {
                 .forward(request, response);
     }
 
-    // 处理登录提交
+
     @Override
     protected void doPost(HttpServletRequest request,
                           HttpServletResponse response)
@@ -47,13 +46,13 @@ public class LoginServlet extends HttpServlet {
 
         username = username.trim();
 
-        // 1. 从应用共享的用户集合中查找
+
         User user = UserRepository.findByUsername(
                 getServletContext(),
                 username
         );
 
-        // 2. 检查用户是否存在、密码是否正确
+
         if (user == null || !user.getPassword().equals(password)) {
             request.setAttribute("message", "用户名或密码不正确");
 
@@ -62,11 +61,11 @@ public class LoginServlet extends HttpServlet {
             return;
         }
 
-        // 3. 验证通过，将用户对象保存到当前访问者的 Session
+
         HttpSession session = request.getSession();
         session.setAttribute("loginUser", user);
 
-        // 4. 让浏览器重新访问图书列表
+
         response.sendRedirect(request.getContextPath() + "/book");
     }
 }
