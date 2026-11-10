@@ -9,7 +9,7 @@
 </head>
 <body>
 <h1>书香校园图书列表</h1>
-<c:if test="${param.favorite eq 'add'}">
+<c:if test="${param.favorite eq 'added'}">
   <p>收藏成功，可以进入“我的收藏”查看。</p>
 </c:if>
 

@@ -20,7 +20,7 @@ public class BookRepository {
                     "讲述人力车夫祥子的悲惨命运。", true
             ),
             new Book(
-                    4, "小王子", "圣埃里克", "童话",
+                    4, "小王子", "圣埃克苏佩里", "童话",
                     "讲述小王子在各个星球间旅行的故事。", true
             ),
             new Book(
