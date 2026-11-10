@@ -81,6 +81,19 @@ public class LoginServlet extends HttpServlet {
 
         HttpSession session = request.getSession();
         session.setAttribute("loginUser", user);
+        // 先读取旧 Cookie，再写入本次登录时间。
+        // 这是当前浏览器的记录，不是每个账号独立的登录历史。
+        String previousLoginTime = null;
+        Cookie[] existingCookies = request.getCookies();
+        if (existingCookies != null) {
+            for (Cookie existingCookie : existingCookies) {
+                if ("lastlogintime".equals(existingCookie.getName())) {
+                    previousLoginTime = existingCookie.getValue();
+                    break;
+                }
+            }
+        }
+        session.setAttribute("previousLoginTime", previousLoginTime);
         String currentTime = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss").format(new Date());
         Cookie cookie = new Cookie("lastlogintime", currentTime);
         cookie.setMaxAge(60*60*24*7);
