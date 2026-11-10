@@ -42,7 +42,7 @@
     </h2>
 
     <p>作者：<c:out value="${book.author}" /></p>
-
+    <p>类别 <c:out  value="${ book.category}"/> </p>
     <c:choose>
       <c:when test="${book.available}">
         <p>状态：在架</p>

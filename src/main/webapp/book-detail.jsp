@@ -14,7 +14,9 @@
   作者：
   <c:out value="${requestScope.book.author}" />
 </p>
-
+<p>类别：
+    <c:out value="${requestScope.book.category}"/>
+</p>
 <p>
   简介：
   <c:out value="${requestScope.book.description}" />
