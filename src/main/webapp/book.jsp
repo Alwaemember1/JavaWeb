@@ -9,12 +9,21 @@
 </head>
 <body>
 <h1>书香校园图书列表</h1>
+<c:if test="${param.favorite eq 'add'}">
+  <p>收藏成功，可以进入“我的收藏”查看。</p>
+</c:if>
+
+<c:if test="${param.favorite eq 'exists'}">
+  <p>你已经收藏过这本书了。</p>
+</c:if>
 <c:choose>
   <c:when test="${not empty sessionScope.loginUser}">
     <p>
       欢迎，
       <c:out value="${sessionScope.loginUser.nickname}" />
     </p>
+    <c:url value="/favorites" var="myFavoritesUrl" />
+    <a href="${myFavoritesUrl}">我的收藏</a>
     <c:url value="/logout" var="logoutUrl" />
 
     <form action="${logoutUrl}" method="post">
