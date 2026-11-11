@@ -24,6 +24,8 @@
       欢迎，
       <c:out value="${sessionScope.loginUser.nickname}" />
     </p>
+    <c:url value="/profile" var="profileUrl" />
+    <a href="${profileUrl}">个人中心</a>
     <c:url value="/favorites" var="myFavoritesUrl" />
     <a href="${myFavoritesUrl}">我的收藏</a>
     <c:url value="/logout" var="logoutUrl" />

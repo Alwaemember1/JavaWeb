@@ -7,6 +7,8 @@ import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import com.henau.book.data.AvatarRepository;
 
 @WebListener
 public class AppContextListener implements ServletContextListener {
@@ -16,5 +18,6 @@ public class AppContextListener implements ServletContextListener {
         // 应用启动时初始化一次，供注册和后续登录共同使用。
         event.getServletContext().setAttribute("users", new ArrayList<User>());
         event.getServletContext().setAttribute("favorites", new ArrayList<Favorite>());
+        event.getServletContext().setAttribute("avatars", new HashMap<String, AvatarRepository.Avatar>());
     }
 }
