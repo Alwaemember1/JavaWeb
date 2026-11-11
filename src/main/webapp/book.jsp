@@ -6,8 +6,10 @@
 <head>
   <meta charset="UTF-8">
   <title>图书列表</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
+<%@ include file="/WEB-INF/nav.jspf" %>
 <h1>书香校园图书列表</h1>
 <c:if test="${param.favorite eq 'added'}">
   <p>收藏成功，可以进入“我的收藏”查看。</p>

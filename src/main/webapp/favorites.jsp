@@ -6,8 +6,10 @@
 <head>
     <meta charset="UTF-8">
     <title>我的收藏</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
+<%@ include file="/WEB-INF/nav.jspf" %>
 <h1>收藏列表</h1>
 <c:if test="${param.result eq 'removed'}">
     <p>已取消收藏。</p>

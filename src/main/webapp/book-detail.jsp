@@ -6,8 +6,10 @@
 <head>
   <meta charset="UTF-8">
   <title>图书详情</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
+<%@ include file="/WEB-INF/nav.jspf" %>
 <h1><c:out value="${requestScope.book.title}" /></h1>
 
 <p>
