@@ -24,10 +24,17 @@
 
   <filter-mapping>
     <filter-name>LoginFilter</filter-name>
-  <url-pattern>/profile</url-pattern>
+    <url-pattern>/login</url-pattern>
+    <url-pattern>/book</url-pattern>
+    <url-pattern>/book/detail</url-pattern>
+    <url-pattern>/profile</url-pattern>
     <url-pattern>/favorites</url-pattern>
     <url-pattern>/avatar/upload</url-pattern>
     <url-pattern>/avatar/image</url-pattern>
     <dispatcher>REQUEST</dispatcher>
   </filter-mapping>
+
+  <welcome-file-list>
+    <welcome-file>book</welcome-file>
+  </welcome-file-list>
 </web-app>

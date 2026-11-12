@@ -1,83 +1,48 @@
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <title>图书列表</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+    <%@ include file="/WEB-INF/head.jspf" %>
+    <title>书香校园 · 图书漂流站</title>
 </head>
 <body>
+<c:set var="activePage" value="books" />
 <%@ include file="/WEB-INF/nav.jspf" %>
-<h1>书香校园图书列表</h1>
-<c:if test="${param.favorite eq 'added'}">
-  <p>收藏成功，可以进入“我的收藏”查看。</p>
-</c:if>
-
-<c:if test="${param.favorite eq 'exists'}">
-  <p>你已经收藏过这本书了。</p>
-</c:if>
-<c:choose>
-  <c:when test="${not empty sessionScope.loginUser}">
-    <p>
-      欢迎，
-      <c:out value="${sessionScope.loginUser.nickname}" />
-    </p>
-    <c:url value="/profile" var="profileUrl" />
-    <a href="${profileUrl}">个人中心</a>
-    <c:url value="/favorites" var="myFavoritesUrl" />
-    <a href="${myFavoritesUrl}">我的收藏</a>
-    <c:url value="/logout" var="logoutUrl" />
-
-    <form action="${logoutUrl}" method="post">
-      <button type="submit">退出登录</button>
-    </form>
-  </c:when>
-
-  <c:otherwise>
-    <c:url value="/login" var="loginUrl" />
-    <a href="${loginUrl}">登录</a>
-  </c:otherwise>
-</c:choose>
-<c:if test="${empty requestScope.books}">
-  <p>暂无图书。</p>
-</c:if>
-
-<c:forEach items="${requestScope.books}"
-           var="book"
-           varStatus="status">
-
-  <div>
-    <h2>
-        ${status.count}.
-      <c:out value="${book.title}" />
-    </h2>
-
-    <p>作者：<c:out value="${book.author}" /></p>
-    <p>类别 <c:out  value="${ book.category}"/> </p>
-    <c:choose>
-      <c:when test="${book.available}">
-        <p>状态：在架</p>
-      </c:when>
-      <c:otherwise>
-        <p>状态：已借出</p>
-      </c:otherwise>
-    </c:choose>
-
-    <c:url value="/book/detail" var="detailUrl">
-      <c:param name="id" value="${book.id}" />
-    </c:url>
-
-    <a href="${detailUrl}">查看详情</a>
-    <c:url value="/favorites" var="favoriteUrl">
-    </c:url>
-    <form action="${favoriteUrl}" method="post">
-      <input type="hidden" name="bookId" value="${book.id}" />
-      <button type="submit">加入收藏</button>
-    </form>
-    <hr>
-  </div>
-</c:forEach>
+<main class="container main-content">
+    <section class="hero" aria-labelledby="page-title">
+        <div class="hero-content">
+            <h1 id="page-title">图书漂流站</h1>
+            <p>浏览校园共享图书，收藏想读的下一本。</p>
+            <a class="button button-light" href="#catalog">浏览馆藏 <span aria-hidden="true">↓</span></a>
+        </div>
+    </section>
+    <section id="catalog" class="catalog" aria-labelledby="catalog-title">
+        <div class="section-heading">
+            <h2 id="catalog-title">馆藏图书</h2>
+            <span class="section-count">共 ${fn:length(requestScope.books)} 本</span>
+        </div>
+        <c:if test="${param.favorite eq 'added'}">
+            <p class="notice notice-success" role="status">收藏成功，可以进入“我的收藏”查看。</p>
+        </c:if>
+        <c:if test="${param.favorite eq 'exists'}">
+            <p class="notice" role="status">你已经收藏过这本书了。</p>
+        </c:if>
+        <c:choose>
+            <c:when test="${empty requestScope.books}">
+                <p class="empty-state">暂无图书。</p>
+            </c:when>
+            <c:otherwise>
+                <div class="book-grid">
+                    <c:forEach items="${requestScope.books}" var="book" varStatus="cardStatus">
+                        <%@ include file="/WEB-INF/book-card.jspf" %>
+                    </c:forEach>
+                </div>
+            </c:otherwise>
+        </c:choose>
+    </section>
+</main>
+<%@ include file="/WEB-INF/footer.jspf" %>
 </body>
 </html>

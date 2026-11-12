@@ -40,7 +40,7 @@ public class FavoriteServlet extends HttpServlet {
         request.setAttribute("favoriteBooks", books);
 
         // ③ 转发到收藏页面
-        request.getRequestDispatcher("/favorites.jsp")
+        request.getRequestDispatcher("/WEB-INF/favorites.jsp")
                 .forward(request, response);
     }
 

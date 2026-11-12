@@ -134,7 +134,10 @@ public class AvatarServlet extends HttpServlet {
                 if (!expectedFormat.equalsIgnoreCase(format)) return false;
                 int width = reader.getWidth(0);
                 int height = reader.getHeight(0);
-                return width > 0 && height > 0 && width <= 4096 && height <= 4096;
+                if (width <= 0 || height <= 0 || width > 4096 || height > 4096) {
+                    return false;
+                }
+                return reader.read(0) != null;
             } finally {
                 reader.dispose();
             }

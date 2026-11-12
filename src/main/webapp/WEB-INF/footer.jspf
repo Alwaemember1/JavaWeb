@@ -1,6 +1,7 @@
-<footer class="site-footer" style="margin:32px 0 16px;padding:16px 0;border-top:1px solid #ddd;color:#64748b;font-size:14px;">
-    <span>书香校园图书漂流站</span>
-    <span style="margin-left:16px;">
-        当前在线会话数：${applicationScope.onlineCount}
-    </span>
+<%@ page pageEncoding="UTF-8" %>
+<footer class="site-footer">
+    <div class="container footer-inner">
+        <span class="footer-name">书香校园 · 图书漂流站</span>
+        <span class="online-count">当前在线会话数：${applicationScope.onlineCount}</span>
+    </div>
 </footer>

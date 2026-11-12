@@ -25,37 +25,45 @@ public class RegisterServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
+        String confirmPassword = request.getParameter("confirmPassword");
         String nickname = request.getParameter("nickname");
 
-        if (username == null || username.isBlank()) {
+        if (username == null || username.isBlank() || username.trim().isEmpty()) {
             showMessage(request, response, "用户名不能为空");
             return;
         }
+        username = username.trim();
+        if (username.length() > 20) {
+            showMessage(request, response, "用户名长度必须为1～20个字符");
+            return;
+        }
+
         if (password == null || password.isBlank()) {
             showMessage(request, response, "密码不能为空");
             return;
         }
-        if (nickname == null || nickname.isBlank()) {
+        if (password.length() < 6 || password.length() > 32) {
+            showMessage(request, response, "密码长度必须为6～32个字符");
+            return;
+        }
+        if (confirmPassword == null || confirmPassword.isEmpty()) {
+            showMessage(request, response, "请输入确认密码");
+            return;
+        }
+        if (!password.equals(confirmPassword)) {
+            showMessage(request, response, "两次输入的密码不一致");
+            return;
+        }
+
+        if (nickname == null || nickname.isBlank() || nickname.trim().isEmpty()) {
             showMessage(request, response, "昵称不能为空");
             return;
         }
-
-        username = username.trim();
         nickname = nickname.trim();
-
-        if (username.length() < 4 || username.length() > 20) {
-            showMessage(request, response, "用户名长度必须为4～20个字符");
-            return;
-        }
-        if (password.length() < 8 || password.length() > 32) {
-            showMessage(request, response, "密码长度必须为8～32个字符");
-            return;
-        }
         if (nickname.length() > 20) {
             showMessage(request, response, "昵称不能超过20个字符");
             return;
         }
-
 
         User user = new User(username, password, nickname);
         boolean saved = UserRepository.save(getServletContext(), user);

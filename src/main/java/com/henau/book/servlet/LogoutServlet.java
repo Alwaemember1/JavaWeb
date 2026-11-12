@@ -1,5 +1,6 @@
 package com.henau.book.servlet;
 
+import com.henau.book.auth.RememberLogin;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,7 +16,8 @@ public class LogoutServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request,
                          HttpServletResponse response)
             throws IOException {
-        HttpSession session =request.getSession(false);
+        RememberLogin.from(getServletContext()).forget(request, response);
+        HttpSession session = request.getSession(false);
         if (session != null) {
             session.invalidate();
         }
